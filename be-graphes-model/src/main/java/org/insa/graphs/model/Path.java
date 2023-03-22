@@ -238,7 +238,7 @@ public class Path {
      * 
      */
     public double getTravelTime(double speed) {
-        // T
+        
         double totalTravelTime = 0;
         for (Arc a : this.getArcs()){
             totalTravelTime += a.getTravelTime(speed);
@@ -258,7 +258,11 @@ public class Path {
      */
     public double getMinimumTravelTime() {
         // TODO:
-        return 0;
+        double minimumTime=0;
+        for(Arc a:this.getArcs()){
+            minimumTime+=a.getMinimumTravelTime();
+        }
+        return minimumTime;
     }
 
 }
