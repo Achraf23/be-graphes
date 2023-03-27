@@ -29,13 +29,34 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
+     *
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+
+        List<Arc> arcs = new ArrayList<>();
+        if (nodes.size() == 1){
+            return new Path(graph, nodes.get(0));
+        }
+        for (int i=0; i< nodes.size()-1; i++){
+            if (!nodes.get(i).hasSuccessors()){
+                throw new IllegalArgumentException("One of the nodes has no successors : cannot find a path");
+            }
+            int max_speed = -1;
+            Arc fastest_arc = null;
+            for (Arc arc : nodes.get(i).getSuccessors()){
+                if (arc.getDestination().equals(nodes.get(i+1)) || (arc.getLength()/(arc.getRoadInformation().getMaximumSpeed())) > max_speed){
+                    max_speed = arc.getRoadInformation().getMaximumSpeed();
+                    fastest_arc = arc;
+                }
+            }
+                if (max_speed == -1){
+                    throw new IllegalArgumentException("Cannot found a path between nodes");
+                }
+                else{
+                    arcs.add(fastest_arc);
+                }
+        }
         return new Path(graph, arcs);
     }
 
@@ -55,7 +76,7 @@ public class Path {
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
+        List<Arc> arcs = new ArrayList<>();
         // TODO:
         return new Path(graph, arcs);
     }
@@ -253,11 +274,9 @@ public class Path {
      * on every arc.
      * 
      * @return Minimum travel time to travel this path (in seconds).
-     * 
-     * @deprecated Need to be implemented.
+     *
      */
     public double getMinimumTravelTime() {
-        // TODO:
         double minimumTime=0;
         for(Arc a:this.getArcs()){
             minimumTime+=a.getMinimumTravelTime();
