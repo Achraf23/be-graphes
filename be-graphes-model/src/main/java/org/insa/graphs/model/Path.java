@@ -113,6 +113,10 @@ public class Path {
             
                             }
                         }
+
+                        if(min==Float.MAX_VALUE){
+                            throw new IllegalArgumentException("Cannot found a path between nodes");
+                        }
         
                         
         
