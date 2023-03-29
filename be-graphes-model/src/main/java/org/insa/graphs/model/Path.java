@@ -29,14 +29,34 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
+     *
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        
+
+        List<Arc> arcs = new ArrayList<>();
+        if (nodes.size() == 1){
+            return new Path(graph, nodes.get(0));
+        }
+        for (int i=0; i< nodes.size()-1; i++){
+            if (!nodes.get(i).hasSuccessors()){
+                throw new IllegalArgumentException("One of the nodes has no successors : cannot find a path");
+            }
+            int max_speed = -1;
+            Arc fastest_arc = null;
+            for (Arc arc : nodes.get(i).getSuccessors()){
+                if (arc.getDestination().equals(nodes.get(i+1)) || (arc.getLength()/(arc.getRoadInformation().getMaximumSpeed())) > max_speed){
+                    max_speed = arc.getRoadInformation().getMaximumSpeed();
+                    fastest_arc = arc;
+                }
+            }
+                if (max_speed == -1){
+                    throw new IllegalArgumentException("Cannot found a path between nodes");
+                }
+                else{
+                    arcs.add(fastest_arc);
+                }
+        }
         return new Path(graph, arcs);
     }
 
@@ -56,40 +76,71 @@ public class Path {
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        RoadInformation r=new RoadInformation(null, null, false, 0, null);  
         List<Arc> arcs = new ArrayList<Arc>(); 
         
-        if(nodes.size()!=0){
-            for(int i = 0; i < nodes.size()-1; i++){
+        if(nodes.size()==0)
+            return new Path(graph);
+        else{
+            if(nodes.size()==1)
+                return new Path(graph,nodes.get(0));
+            else{
+                
+                if(nodes.size()!=0){
+                    for(int i=0;i<nodes.size()-1;i++){
+                        
+                        float min=Float.MAX_VALUE;
+                        Arc arc=null;
 
-                /*Node n1=graph.get(nodes.get(i).getId());
-                Node n2=graph.get(nodes.get(i+1).getId());
-
-                
-                
-                arcs.add(Node.linkNodes(n1,n2, 10, r, null));*/
-                
+                        if (!nodes.get(i).hasSuccessors()){
+                            throw new IllegalArgumentException("One of the nodes has no successors : cannot find a path");
+                        }
+                        else{
+                            for(Arc a:nodes.get(i).getSuccessors()){
+                            
+        
+                                if (a.getDestination().equals(nodes.get(i+1)) && a.getLength()<min){
+                                    //find arc related to the next node
+                                    min=a.getLength();
+                                    arc=a;
+            
+                                }
+            
+                                
+            
+                            }
+                        }
+        
+                        
+        
+                        arcs.add(arc);
+                        
+                    }
+                }
             }
         }
+        
+        
+        
+        
+
+        
+
+        
+        /*
         Node n1=graph.get(nodes.get(0).getId());
-        Node n2=graph.get(nodes.get(1).getId());
-        System.out.println(n2);
-        System.out.println(n1.getSuccessors().get(0).getDestination());
+        Node n2=graph.get(nodes.get(1).getId());*/
+        //System.out.println(n2);
+        //System.out.println(n1.getSuccessors().get(0).getDestination());
 
-        for(int i=0;i<n1.getNumberOfSuccessors();i++){
-
-        }
+        
+       /*
         int i=0;
         while(i<n1.getNumberOfSuccessors() && n1.getSuccessors().get(i).getDestination().equals(n2)==false){
 
             i++;
-        }
+        }*/
 
-        System.out.println(i);
 
-        // TODO:
-
-        Path p=new Path(graph, arcs);
         
         return new Path(graph, arcs);
     }
@@ -287,11 +338,9 @@ public class Path {
      * on every arc.
      * 
      * @return Minimum travel time to travel this path (in seconds).
-     * 
-     * @deprecated Need to be implemented.
+     *
      */
     public double getMinimumTravelTime() {
-        // TODO:
         double minimumTime=0;
         for(Arc a:this.getArcs()){
             minimumTime+=a.getMinimumTravelTime();
