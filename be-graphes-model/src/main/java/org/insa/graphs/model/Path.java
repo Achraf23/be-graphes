@@ -35,6 +35,10 @@ public class Path {
             throws IllegalArgumentException {
 
         List<Arc> arcs = new ArrayList<>();
+
+        if (nodes.isEmpty()){
+            return new Path(graph);
+        }
         if (nodes.size() == 1){
             return new Path(graph, nodes.get(0));
         }
@@ -42,15 +46,15 @@ public class Path {
             if (!nodes.get(i).hasSuccessors()){
                 throw new IllegalArgumentException("One of the nodes has no successors : cannot find a path");
             }
-            int max_speed = -1;
+            double min_time = Double.MAX_VALUE;
             Arc fastest_arc = null;
             for (Arc arc : nodes.get(i).getSuccessors()){
-                if (arc.getDestination().equals(nodes.get(i+1)) || (arc.getLength()/(arc.getRoadInformation().getMaximumSpeed())) > max_speed){
-                    max_speed = arc.getRoadInformation().getMaximumSpeed();
+                if (arc.getDestination().equals(nodes.get(i+1)) && (arc.getMinimumTravelTime() < min_time)){
+                    min_time = arc.getMinimumTravelTime();
                     fastest_arc = arc;
                 }
             }
-                if (max_speed == -1){
+                if (min_time == Double.MAX_VALUE){
                     throw new IllegalArgumentException("Cannot found a path between nodes");
                 }
                 else{
