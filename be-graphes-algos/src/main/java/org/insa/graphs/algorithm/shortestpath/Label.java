@@ -25,12 +25,24 @@ public class Label{
         return marked;
     }
 
-    public Double getSmallestCost() {
+    public void setMarked(boolean marked){
+        this.marked = marked;
+    }
+
+    public Double getCurrentCost() {
         return this.currentCost;
+    }
+
+    public void setCurrentCost(double cost){
+        this.currentCost = cost;
     }
 
     public Arc getFather() {
         return father;
+    }
+
+    public void setFather(Arc father){
+        this.father = father;
     }
 
     public Double getCost(){
