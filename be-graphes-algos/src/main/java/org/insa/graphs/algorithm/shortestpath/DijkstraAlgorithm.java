@@ -1,9 +1,9 @@
 package org.insa.graphs.algorithm.shortestpath;
 
 import java.util.ArrayList;
-import java.lang.Math;
 
 import org.insa.graphs.algorithm.utils.BinaryHeap;
+import org.insa.graphs.algorithm.utils.ElementNotFoundException;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
@@ -35,11 +35,20 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while (!isAllNodesMarked(labels)){
             Node n = binaryHeap.deleteMin();
             labels.get(n.getId()).setMarked(true);
-            for (Arc successor : n.getSuccessors()){
-                int successorId = successor.getDestination().getId();
+            for (Arc arc : n.getSuccessors()){
+                int successorId = arc.getDestination().getId();
                 if (!labels.get(successorId).isMarked()){
-                    double cost = Math.min(labels.get(successorId).getCurrentCost(), labels.get(n.getId()).getCost()+successor.getLength());
-                    labels.get(successorId).setCurrentCost(cost);
+                    double newCost = labels.get(n.getId()).getCost()+arc.getLength();
+                    if (labels.get(successorId).getCurrentCost() > newCost){
+                        labels.get(successorId).setCurrentCost(newCost);
+                        try {
+                           binaryHeap.remove(arc.getDestination()); 
+                        }
+                        catch (ElementNotFoundException e){}
+                        binaryHeap.insert(arc.getDestination());
+                        labels.get(arc.getDestination().getId()).setFather(arc);
+                    }
+                    
                 }
             }
 
