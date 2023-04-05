@@ -60,3 +60,6 @@ You first need to register and then log in to the platform you want. The steps t
 	```
 	
 Another way is to do a bare clone and then mirror it to your repository: [https://help.github.com/articles/importing-a-git-repository-using-the-command-line/](https://help.github.com/articles/importing-a-git-repository-using-the-command-line/)
+
+
+https://prod.liveshare.vsengsaas.visualstudio.com/join?BACB592CDEABA61B88D1337F3195915DF171
