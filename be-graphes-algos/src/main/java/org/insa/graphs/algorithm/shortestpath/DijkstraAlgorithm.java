@@ -11,6 +11,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         final ShortestPathData data = getInputData();
         ShortestPathSolution solution = null;
         // TODO:
+        
+        // labels
+        
+
         return solution;
     }
 
