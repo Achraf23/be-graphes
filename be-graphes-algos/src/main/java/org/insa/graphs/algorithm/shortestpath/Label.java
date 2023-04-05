@@ -3,7 +3,7 @@ package org.insa.graphs.algorithm.shortestpath;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
-public class Label{
+public class Label implements Comparable<Label>{
 
     private Node currentNode;
     private boolean marked;
@@ -47,5 +47,10 @@ public class Label{
 
     public Double getCost(){
         return this.currentCost;
+    }
+
+    @Override
+    public int compareTo(Label other) {
+        return Double.compare(getCost(), other.getCost());
     }
 }

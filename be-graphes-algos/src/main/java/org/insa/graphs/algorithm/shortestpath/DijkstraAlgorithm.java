@@ -19,33 +19,34 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ShortestPathSolution solution = null;
         
         ArrayList<Label> labels = new ArrayList<>();
-        BinaryHeap<Node> binaryHeap = new BinaryHeap<>();
-        for (Node n : this.data.getGraph().getNodes()){
+        BinaryHeap<Label> binaryHeap = new BinaryHeap<>();
+        for (Node n : data.getGraph().getNodes()){
             Label labelNode;
-            if (n.equals(this.data.getGraph().getNodes().get(0))){
+            if (n.equals(data.getOrigin())){
                 labelNode = new Label(n, false, 0.0, null);
-                binaryHeap.insert(n);
+                binaryHeap.insert(labelNode);
             }
             else{
                 labelNode = new Label(n, false, Double.POSITIVE_INFINITY, null);
             }
             labels.add(labelNode);
         }
-
         while (!isAllNodesMarked(labels)){
-            Node n = binaryHeap.deleteMin();
-            labels.get(n.getId()).setMarked(true);
-            for (Arc arc : n.getSuccessors()){
+            Label labelNode = binaryHeap.deleteMin();
+            labelNode.setMarked(true);
+            
+            int indexNode = labels.indexOf(labelNode);
+            for (Arc arc : this.data.getGraph().getNodes().get(indexNode).getSuccessors()){
                 int successorId = arc.getDestination().getId();
                 if (!labels.get(successorId).isMarked()){
-                    double newCost = labels.get(n.getId()).getCost()+arc.getLength();
+                    double newCost = labels.get(indexNode).getCost()+arc.getLength(); 
                     if (labels.get(successorId).getCurrentCost() > newCost){
-                        labels.get(successorId).setCurrentCost(newCost);
                         try {
-                           binaryHeap.remove(arc.getDestination()); 
+                           binaryHeap.remove(labels.get(successorId)); 
                         }
                         catch (ElementNotFoundException e){}
-                        binaryHeap.insert(arc.getDestination());
+                        labels.get(successorId).setCurrentCost(newCost);
+                        binaryHeap.insert(labels.get(successorId));
                         labels.get(arc.getDestination().getId()).setFather(arc);
                     }
                     
