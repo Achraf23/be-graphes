@@ -7,13 +7,13 @@ public class Label{
 
     private Node currentNode;
     private boolean marked;
-    private Double smallestCost;
+    private Double currentCost;
     private Arc father;
 
-    public Label(Node currentNode, boolean marked, Double smallestCost, Arc father) {
+    public Label(Node currentNode, boolean marked, Double currentCost, Arc father) {
         this.currentNode = currentNode;
         this.marked = marked;
-        this.smallestCost = smallestCost;
+        this.currentCost = currentCost;
         this.father = father;
     }
 
@@ -26,10 +26,14 @@ public class Label{
     }
 
     public Double getSmallestCost() {
-        return smallestCost;
+        return this.currentCost;
     }
 
     public Arc getFather() {
         return father;
+    }
+
+    public Double getCost(){
+        return this.currentCost;
     }
 }
