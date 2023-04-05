@@ -63,7 +63,7 @@ public class Launch {
         // Draw the graph on the drawing.
         drawing.drawGraph(graph);
 
-        // TODO: Create a PathReader.
+        // Create a PathReader.
         final PathReader pathReader =new BinaryPathReader(
             new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
 
