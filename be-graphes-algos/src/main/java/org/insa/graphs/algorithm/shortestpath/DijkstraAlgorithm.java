@@ -9,6 +9,8 @@ import org.insa.graphs.model.Path;
 import java.lang.Math;
 
 import org.insa.graphs.algorithm.utils.BinaryHeap;
+
+import org.insa.graphs.algorithm.utils.ElementNotFoundException;
 import org.insa.graphs.model.Node;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
@@ -22,28 +24,37 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         final ShortestPathData data = getInputData();
         
         ArrayList<Label> labels = new ArrayList<>();
-        
-        BinaryHeap<Node> binaryHeap = new BinaryHeap<>();
+        BinaryHeap<Label> binaryHeap = new BinaryHeap<>();
         for (Node n : data.getGraph().getNodes()){
             Label labelNode;
             if (n.equals(data.getOrigin())){
                 labelNode = new Label(n, false, 0.0, null);
-                binaryHeap.insert(n);
+                binaryHeap.insert(labelNode);
             }
             else{
                 labelNode = new Label(n, false, Double.POSITIVE_INFINITY, null);
             }
             labels.add(labelNode);
         }
-
         while (!isAllNodesMarked(labels)){
-            Node n = binaryHeap.deleteMin();
-            labels.get(n.getId()).setMarked(true);
-            for (Arc successor : n.getSuccessors()){
-                int successorId = successor.getDestination().getId();
+            Label labelNode = binaryHeap.deleteMin();
+            labelNode.setMarked(true);
+            
+            int indexNode = labels.indexOf(labelNode);
+            for (Arc arc : this.data.getGraph().getNodes().get(indexNode).getSuccessors()){
+                int successorId = arc.getDestination().getId();
                 if (!labels.get(successorId).isMarked()){
-                    double cost = Math.min(labels.get(successorId).getCurrentCost(), labels.get(n.getId()).getCost()+successor.getLength());
-                    labels.get(successorId).setCurrentCost(cost);
+                    double newCost = labels.get(indexNode).getCost()+arc.getLength(); 
+                    if (labels.get(successorId).getCurrentCost() > newCost){
+                        try {
+                           binaryHeap.remove(labels.get(successorId)); 
+                        }
+                        catch (ElementNotFoundException e){}
+                        labels.get(successorId).setCurrentCost(newCost);
+                        binaryHeap.insert(labels.get(successorId));
+                        labels.get(arc.getDestination().getId()).setFather(arc);
+                    }
+                    
                 }
             }
 
