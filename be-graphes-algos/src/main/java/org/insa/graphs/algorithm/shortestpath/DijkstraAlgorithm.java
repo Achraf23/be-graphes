@@ -40,7 +40,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while (!binaryHeap.isEmpty() && !labels.get(data.getDestination().getId()).isMarked()){
             Label labelNode = binaryHeap.deleteMin();
             labelNode.setMarked(true);
-            
+            notifyNodeMarked(labelNode.getCurrentNode());
+
+            //Vérification de l'augmentation croissante des coûts des labels marqués
+            //System.out.println("coût label marqué: "+labelNode.getCost());         
             
             for (Arc arc : labelNode.getCurrentNode().getSuccessors()){
                 if (data.isAllowed(arc)){
@@ -51,7 +54,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                             try {
                             binaryHeap.remove(labels.get(successorId)); 
                             }
-                            catch (ElementNotFoundException e){}
+                            catch (ElementNotFoundException e){
+                                notifyNodeReached(arc.getDestination());
+                            }
                             labels.get(successorId).setCurrentCost(newCost);
                             binaryHeap.insert(labels.get(successorId));
                             labels.get(arc.getDestination().getId()).setFather(arc);
@@ -69,8 +74,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         if(labels.get(data.getDestination().getId()).getFather()==null){
             solution = new ShortestPathSolution(data, Status.INFEASIBLE);
         }else{
-            // The destination has been found, notify the observers.
-            notifyDestinationReached(data.getDestination());
 
             ArrayList<Arc> arcs = new ArrayList<>();
             Arc arc=labels.get(data.getDestination().getId()).getFather();
