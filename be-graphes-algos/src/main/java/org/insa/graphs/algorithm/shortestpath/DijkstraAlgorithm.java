@@ -36,6 +36,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             }
             labels.add(labelNode);
         }
+
         while (!isAllNodesMarked(labels)){
             Label labelNode = binaryHeap.deleteMin();
             labelNode.setMarked(true);
@@ -53,6 +54,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                         labels.get(successorId).setCurrentCost(newCost);
                         binaryHeap.insert(labels.get(successorId));
                         labels.get(arc.getDestination().getId()).setFather(arc);
+                        
                     }
                     
                 }
@@ -84,6 +86,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 
         }
+
         return solution;
     }
 

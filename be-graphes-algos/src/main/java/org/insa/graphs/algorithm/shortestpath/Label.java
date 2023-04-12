@@ -53,4 +53,8 @@ public class Label implements Comparable<Label>{
     public int compareTo(Label other) {
         return Double.compare(getCost(), other.getCost());
     }
+
+    public String toString(){
+        return this.currentCost+"\n";
+    }
 }
