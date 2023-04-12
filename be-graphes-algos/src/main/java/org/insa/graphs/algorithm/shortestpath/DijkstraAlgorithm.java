@@ -43,10 +43,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             
             
             for (Arc arc : labelNode.getCurrentNode().getSuccessors()){
-                if(data.isAllowed(arc)){
+                if (data.isAllowed(arc)){
                     int successorId = arc.getDestination().getId();
                     if (!labels.get(successorId).isMarked()){
-                        double newCost = labelNode.getCost()+arc.getLength(); 
+                        double newCost = labelNode.getCost()+data.getCost(arc); 
                         if (labels.get(successorId).getCurrentCost() > newCost){
                             try {
                             binaryHeap.remove(labels.get(successorId)); 
