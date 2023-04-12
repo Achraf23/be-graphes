@@ -37,15 +37,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             labels.add(labelNode);
         }
 
-        while (!isAllNodesMarked(labels)){
+        while (!binaryHeap.isEmpty() && !labels.get(data.getDestination().getId()).isMarked()){
             Label labelNode = binaryHeap.deleteMin();
             labelNode.setMarked(true);
             
-            int indexNode = labels.indexOf(labelNode);
-            for (Arc arc : this.data.getGraph().getNodes().get(indexNode).getSuccessors()){
+            
+            for (Arc arc : labelNode.getCurrentNode().getSuccessors()){
                 int successorId = arc.getDestination().getId();
                 if (!labels.get(successorId).isMarked()){
-                    double newCost = labels.get(indexNode).getCost()+arc.getLength(); 
+                    double newCost = labelNode.getCost()+arc.getLength(); 
                     if (labels.get(successorId).getCurrentCost() > newCost){
                         try {
                            binaryHeap.remove(labels.get(successorId)); 
@@ -91,13 +91,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     }
 
 
-    private Boolean isAllNodesMarked(ArrayList<Label> labels){
-        for (Label l : labels){
-            if (!l.isMarked()){
-                return false;
-            }
-        }
-        return true;
-    }
+    
 
 }
