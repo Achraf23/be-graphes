@@ -65,6 +65,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                         
                     }
                 }
+                
             }
 
         }
