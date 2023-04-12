@@ -29,7 +29,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             Label labelNode;
             if (n.equals(data.getOrigin())){
                 labelNode = new Label(n, false, 0.0, null);
-                binaryHeap.insert(labelNode);
+                binaryHeap.insert(labelNode); 
             }
             else{
                 labelNode = new Label(n, false, Double.POSITIVE_INFINITY, null);
@@ -37,18 +37,25 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             labels.add(labelNode);
         }
 
+
+        // mn*log n
         while (!binaryHeap.isEmpty() && !labels.get(data.getDestination().getId()).isMarked()){
+            //boucle while en n
+
             Label labelNode = binaryHeap.deleteMin();
             labelNode.setMarked(true);
             
             
             for (Arc arc : labelNode.getCurrentNode().getSuccessors()){
+                //boucle for en n
+
                 if (data.isAllowed(arc)){
                     int successorId = arc.getDestination().getId();
                     if (!labels.get(successorId).isMarked()){
                         double newCost = labelNode.getCost()+data.getCost(arc); 
                         if (labels.get(successorId).getCurrentCost() > newCost){
                             try {
+                            //log n
                             binaryHeap.remove(labels.get(successorId)); 
                             }
                             catch (ElementNotFoundException e){}
