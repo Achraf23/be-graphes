@@ -4,23 +4,46 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
-import org.insa.graphs.model.RoadInformation;
-import org.insa.graphs.model.RoadInformation.RoadType;
+import org.insa.graphs.model.io.BinaryGraphReader;
+import org.insa.graphs.model.io.BinaryPathReader;
+import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.model.io.GraphReader;
+import org.insa.graphs.model.io.PathReader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class DijkstraTest {
 
-        //algo ou autre attributs des tests
+    //declarations origines/dest/algos
+    private static Node origin1, origin2, origin3, origin4, dest1, dest2, dest3, dest4;
+    
+    private static ArrayList<DijkstraAlgorithm> algoInsa1 = new ArrayList<>();
+    private static ArrayList<DijkstraAlgorithm> algoInsa2 = new ArrayList<>();
+    private static ArrayList<DijkstraAlgorithm> algoToulouse = new ArrayList<>();
+    private static ArrayList<DijkstraAlgorithm> algoBretagne = new ArrayList<>();
+
+    public static List<ArcInspector> allFilterInspectors = ArcInspectorFactory.getAllFilters();
+    //allFilterInspectors.get(0) : Shortest path, all roads allowed
+    //allFilterInspectors.get(1) : Shortest path, only roads open for cars
+    //allFilterInspectors.get(2) : Fastest path, all roads allowed
+    //allFilterInspectors.get(3) : Fastest path, only roads open for cars
+    //allFilterInspectors.get(4) : Fastest path for pedestrian
 
     @BeforeClass
     public static void initAll() throws IOException {
@@ -29,11 +52,7 @@ public class DijkstraTest {
         final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
         final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
 
-        // Small graph use for tests
-        Graph graphInsa;
-        Graph graphToulouse;
-        Graph graphBretagne;
-//TODO : regler pb des import
+        // Lecture des graphs associés
         GraphReader reader = new BinaryGraphReader(
             new DataInputStream(new BufferedInputStream(new FileInputStream(mapInsa))));
         final Graph graphInsa = reader.read();
@@ -46,195 +65,95 @@ public class DijkstraTest {
             new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
         final Graph graphBretagne = reader.read();
 
-        // Create the drawing:
-        final Drawing drawing = createDrawing();
 
-        // Draw the graph on the drawing.
-        drawing.drawGraph(graphInsa);
-        drawing.drawGraph(graphToulouse);
-        drawing.drawGraph(graphBretagne);
+        // // Lecture des path mapInsa
+        // final PathReader pathReaderMapInsa =new BinaryPathReader(
+        //     new DataInputStream(new BufferedInputStream(new FileInputStream(mapInsa))));
+        // final Path pathMapInsa = pathReaderMapInsa.readPath(graphInsa);
 
-        // Create a PathReader.
-        final PathReader pathReader =new BinaryPathReader(
-            new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
+        // // Lecture des path mapToulouse
+        // final PathReader pathReaderMapToulouse =new BinaryPathReader(
+        //     new DataInputStream(new BufferedInputStream(new FileInputStream(mapToulouse))));
+        // final Path pathMapToulouse = pathReaderMapToulouse.readPath(graphToulouse);
 
-        // Read the path.
-        final Path path = pathReader.readPath(graph);
+        // // Lecture des path mapBretagnehemin impossible (avec tous les modes)
+        // final PathReader pathReaderMapBreagne =new BinaryPathReader(
+        //     new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
+        // final Path pathMapBretagne = pathReaderMapBreagne.readPath(graphBretagne);
+        
 
-        // Draw the path.
-        drawing.drawPath(path);
+        //add origin & destination
 
-        DijkstraAlgorithm algo = new DijkstraAlgorithm(new ShortestPathData(graph, null, null, null));   
+        //all road allowed and pedestrians Insa
+        origin1 = graphInsa.getNodes().get(929);
+        dest1 = graphInsa.getNodes().get(240);
 
-    }
+        //same path for everyone Insa
+        origin2 = graphInsa.getNodes().get(232);
+        dest2 = graphInsa.getNodes().get(214);
 
-    @Test
-    public void testConstructor() {
-        assertEquals(graph, emptyPath.getGraph());
-        assertEquals(graph, singleNodePath.getGraph());
-        assertEquals(graph, shortPath.getGraph());
-        assertEquals(graph, longPath.getGraph());
-        assertEquals(graph, loopPath.getGraph());
-        assertEquals(graph, longLoopPath.getGraph());
-        assertEquals(graph, invalidPath.getGraph());
-    }
+        //comparaison shortest et fastest en passant par le periph ou non de Toulouse(mode all roads allowed)
+        origin3 = graphToulouse.getNodes().get(608);
+        dest3 = graphToulouse.getNodes().get(6534);
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testImmutability() {
-        emptyPath.getArcs().add(a2b);
-    }
+        //chemin impossible bretagne
+        origin4 = graphBretagne.getNodes().get(115405);
+        dest4 = graphBretagne.getNodes().get(423742);        
+        
 
-    @Test
-    public void testIsEmpty() {
-        assertTrue(emptyPath.isEmpty());
-
-        assertFalse(singleNodePath.isEmpty());
-        assertFalse(shortPath.isEmpty());
-        assertFalse(longPath.isEmpty());
-        assertFalse(loopPath.isEmpty());
-        assertFalse(longLoopPath.isEmpty());
-        assertFalse(invalidPath.isEmpty());
-    }
-
-    @Test
-    public void testSize() {
-        assertEquals(0, emptyPath.size());
-        assertEquals(1, singleNodePath.size());
-        assertEquals(4, shortPath.size());
-        assertEquals(5, longPath.size());
-        assertEquals(5, loopPath.size());
-        assertEquals(10, longLoopPath.size());
-    }
-
-    @Test
-    public void testIsValid() {
-        assertTrue(emptyPath.isValid());
-        assertTrue(singleNodePath.isValid());
-        assertTrue(shortPath.isValid());
-        assertTrue(longPath.isValid());
-        assertTrue(loopPath.isValid());
-        assertTrue(longLoopPath.isValid());
-
-        assertFalse(invalidPath.isValid());
-    }
-
-    @Test
-    public void testGetLength() {
-        assertEquals(0, emptyPath.getLength(), 1e-6);
-        assertEquals(0, singleNodePath.getLength(), 1e-6);
-        assertEquals(40, shortPath.getLength(), 1e-6);
-        assertEquals(62.8, longPath.getLength(), 1e-6);
-        assertEquals(55, loopPath.getLength(), 1e-6);
-        assertEquals(120, longLoopPath.getLength(), 1e-6);
-    }
-
-    @Test
-    public void testGetTravelTime() {
-        // Note: 18 km/h = 5m/s
-        assertEquals(0, emptyPath.getTravelTime(18), 1e-6);
-        assertEquals(0, singleNodePath.getTravelTime(18), 1e-6);
-        assertEquals(8, shortPath.getTravelTime(18), 1e-6);
-        assertEquals(12.56, longPath.getTravelTime(18), 1e-6);
-        assertEquals(11, loopPath.getTravelTime(18), 1e-6);
-        assertEquals(24, longLoopPath.getTravelTime(18), 1e-6);
-
-        // Note: 28.8 km/h = 8m/s
-        assertEquals(0, emptyPath.getTravelTime(28.8), 1e-6);
-        assertEquals(0, singleNodePath.getTravelTime(28.8), 1e-6);
-        assertEquals(5, shortPath.getTravelTime(28.8), 1e-6);
-        assertEquals(7.85, longPath.getTravelTime(28.8), 1e-6);
-        assertEquals(6.875, loopPath.getTravelTime(28.8), 1e-6);
-        assertEquals(15, longLoopPath.getTravelTime(28.8), 1e-6);
-    }
-
-    @Test
-    public void testGetMinimumTravelTime() {
-        assertEquals(0, emptyPath.getMinimumTravelTime(), 1e-4);
-        assertEquals(0, singleNodePath.getLength(), 1e-4);
-        assertEquals(4, shortPath.getMinimumTravelTime(), 1e-4);
-        assertEquals(5.14, longPath.getMinimumTravelTime(), 1e-4);
-        assertEquals(5.5, loopPath.getMinimumTravelTime(), 1e-4);
-        assertEquals(11.25, longLoopPath.getMinimumTravelTime(), 1e-4);
-    }
-
-    @Test
-    public void testCreateFastestPathFromNodes() {
-        Path path;
-        Arc[] expected;
-
-        // Simple construction
-        path = Path.createFastestPathFromNodes(graph,
-                Arrays.asList(new Node[] { nodes[0], nodes[1], nodes[2] }));
-        expected = new Arc[] { a2b, b2c };
-        assertEquals(expected.length, path.getArcs().size());
-        for (int i = 0; i < expected.length; ++i) {
-            assertEquals(expected[i], path.getArcs().get(i));
+        for (int i = 0; i < 5; i++){
+            algoInsa1.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin1, dest1, allFilterInspectors.get(i))));
         }
-
-        // Not so simple construction
-        path = Path.createFastestPathFromNodes(graph,
-                Arrays.asList(new Node[] { nodes[0], nodes[1], nodes[2], nodes[3] }));
-        expected = new Arc[] { a2b, b2c, c2d_3 };
-        assertEquals(expected.length, path.getArcs().size());
-        for (int i = 0; i < expected.length; ++i) {
-            assertEquals(expected[i], path.getArcs().get(i));
+        for (int i = 0; i < 5; i++){
+            algoInsa2.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin2, dest2, allFilterInspectors.get(i))));
         }
+        
+        algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(0))));
+        algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(2))));
 
-        // Trap construction!
-        path = Path.createFastestPathFromNodes(graph, Arrays.asList(new Node[] { nodes[1] }));
-        assertEquals(nodes[1], path.getOrigin());
-        assertEquals(0, path.getArcs().size());
+        for (int i = 0; i < 5; i++){
+            algoBretagne.add(i, new DijkstraAlgorithm(new ShortestPathData(graphBretagne, origin4, dest4, allFilterInspectors.get(i))));
+        }
+        
+    }
 
-        // Trap construction - The return!
-        path = Path.createFastestPathFromNodes(graph, Arrays.asList(new Node[0]));
-        assertEquals(null, path.getOrigin());
-        assertEquals(0, path.getArcs().size());
-        assertTrue(path.isEmpty());
+    
+
+    @Test
+    public void testFilters() {
+        assertEquals(algoInsa1.get(0).run().isFeasible(), true);
+        assertEquals(algoInsa1.get(1).run().isFeasible(), false);
+        assertEquals(algoInsa1.get(2).run().isFeasible(), true);
+        assertEquals(algoInsa1.get(3).run().isFeasible(), false);
+        assertEquals(algoInsa1.get(4).run().isFeasible(), true);
+    }
+
+
+    @Test
+    public void testGetSamePathForAllFilters() {
+        assertEquals(algoInsa2.get(0).run().getPath().getLength(), algoInsa2.get(1).run().getPath().getLength(), 0.01);
+        assertEquals(algoInsa2.get(1).run().getPath().getLength(), algoInsa2.get(2).run().getPath().getLength(), 0.01);
+        assertEquals(algoInsa2.get(2).run().getPath().getLength(), algoInsa2.get(3).run().getPath().getLength(), 0.01);
+        assertEquals(algoInsa2.get(3).run().getPath().getLength(), algoInsa2.get(4).run().getPath().getLength(), 0.01);
     }
 
     @Test
-    public void testCreateShortestPathFromNodes() {
-        Path path;
-        Arc[] expected;
-
-        // Simple construction
-        path = Path.createShortestPathFromNodes(graph,
-                Arrays.asList(new Node[] { nodes[0], nodes[1], nodes[2] }));
-        expected = new Arc[] { a2b, b2c };
-        assertEquals(expected.length, path.getArcs().size());
-        for (int i = 0; i < expected.length; ++i) {
-            assertEquals(expected[i], path.getArcs().get(i));
-        }
-
-        // Not so simple construction
-        path = Path.createShortestPathFromNodes(graph,
-                Arrays.asList(new Node[] { nodes[0], nodes[1], nodes[2], nodes[3] }));
-        expected = new Arc[] { a2b, b2c, c2d_2 };
-        assertEquals(expected.length, path.getArcs().size());
-        for (int i = 0; i < expected.length; ++i) {
-            assertEquals(expected[i], path.getArcs().get(i));
-        }
-
-        // Trap construction!
-        path = Path.createShortestPathFromNodes(graph, Arrays.asList(new Node[] { nodes[1] }));
-        assertEquals(nodes[1], path.getOrigin());
-        assertEquals(0, path.getArcs().size());
-
-        // Trap construction - The return!
-        path = Path.createShortestPathFromNodes(graph, Arrays.asList(new Node[0]));
-        assertEquals(null, path.getOrigin());
-        assertEquals(0, path.getArcs().size());
-        assertTrue(path.isEmpty());
+    public void testIsShortestPath() {
+        assertTrue(algoToulouse.get(0).run().getPath().getLength() <= algoToulouse.get(1).run().getPath().getLength());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateFastestPathFromNodesException() {
-        Path.createFastestPathFromNodes(graph, Arrays.asList(new Node[] { nodes[1], nodes[0] }));
+    @Test
+    public void testIsFastestPath() {
+        assertTrue(algoToulouse.get(0).run().getPath().getMinimumTravelTime() >= algoToulouse.get(1).run().getPath().getMinimumTravelTime());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateShortestPathFromNodesException() {
-        Path.createShortestPathFromNodes(graph, Arrays.asList(new Node[] { nodes[1], nodes[0] }));
+    @Test
+    public void isInfeasible() {
+        assertEquals(algoBretagne.get(0).run().isFeasible(), false);
+        assertEquals(algoBretagne.get(1).run().isFeasible(), false);
+        assertEquals(algoBretagne.get(2).run().isFeasible(), false);
+        assertEquals(algoBretagne.get(3).run().isFeasible(), false);
+        assertEquals(algoBretagne.get(4).run().isFeasible(), false);
     }
 
 }
