@@ -45,12 +45,10 @@ public class Label implements Comparable<Label>{
         this.father = father;
     }
 
-    public Double getCost(){
-        return this.currentCost;
-    }
+  
 
     public Double getTotalCost() {
-        return getCost()+getCurrentCost();
+        return getCurrentCost();
     }
 
     @Override

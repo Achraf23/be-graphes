@@ -4,20 +4,24 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
 
-public class LabelStar extends Label{
+public class LabelStar extends Label {
 
-    public LabelStar(Node currentNode, boolean marked, Double currentCost, Arc father) {
+    Double totalCost;
+
+    public LabelStar(Node currentNode, boolean marked, Double currentCost, Arc father,Node destination) {
+        //double cost =getCost(destination);
         super(currentNode,marked,currentCost,father);
+        totalCost=this.getCurrentNode().getPoint().distanceTo(destination.getPoint());
     }
     
-
-    public int compareTo(Label other) {
-        return Double.compare(getCost(), other.getCost());
+    public Double getCost(Node destination){
+        return this.getCurrentNode().getPoint().distanceTo(destination.getPoint());
     }
-
-    public Double getTotalCost(Node destinationNode){
-
+   
+    @Override
+    public Double getTotalCost(){
         
-        return getCurrentCost();
+        return getCurrentCost()+totalCost;
     }
+    
 }
