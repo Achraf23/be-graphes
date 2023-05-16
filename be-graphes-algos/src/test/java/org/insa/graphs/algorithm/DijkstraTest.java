@@ -1,7 +1,6 @@
 package org.insa.graphs.algorithm;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedInputStream;
@@ -10,21 +9,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 
-import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
-import org.insa.graphs.model.Path;
 import org.insa.graphs.model.io.BinaryGraphReader;
-import org.insa.graphs.model.io.BinaryPathReader;
-import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.model.io.GraphReader;
-import org.insa.graphs.model.io.PathReader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -46,6 +39,7 @@ public class DijkstraTest {
     //allFilterInspectors.get(4) : Fastest path for pedestrian
 
     @BeforeClass
+
     public static void initAll() throws IOException {
         // Importations des maps
         final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
@@ -64,22 +58,6 @@ public class DijkstraTest {
         reader = new BinaryGraphReader(
             new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
         final Graph graphBretagne = reader.read();
-
-
-        // // Lecture des path mapInsa
-        // final PathReader pathReaderMapInsa =new BinaryPathReader(
-        //     new DataInputStream(new BufferedInputStream(new FileInputStream(mapInsa))));
-        // final Path pathMapInsa = pathReaderMapInsa.readPath(graphInsa);
-
-        // // Lecture des path mapToulouse
-        // final PathReader pathReaderMapToulouse =new BinaryPathReader(
-        //     new DataInputStream(new BufferedInputStream(new FileInputStream(mapToulouse))));
-        // final Path pathMapToulouse = pathReaderMapToulouse.readPath(graphToulouse);
-
-        // // Lecture des path mapBretagnehemin impossible (avec tous les modes)
-        // final PathReader pathReaderMapBreagne =new BinaryPathReader(
-        //     new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
-        // final Path pathMapBretagne = pathReaderMapBreagne.readPath(graphBretagne);
         
 
         //add origin & destination
@@ -98,8 +76,7 @@ public class DijkstraTest {
 
         //chemin impossible bretagne
         origin4 = graphBretagne.getNodes().get(115405);
-        dest4 = graphBretagne.getNodes().get(423742);        
-        
+        dest4 = graphBretagne.getNodes().get(423742);         
 
         for (int i = 0; i < 5; i++){
             algoInsa1.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin1, dest1, allFilterInspectors.get(i))));
@@ -116,6 +93,22 @@ public class DijkstraTest {
         }
         
     }
+
+    // public static void addAlgos(Graph graphInsa,Graph graphToulouse,Graph graphBretagne){
+    //     for (int i = 0; i < 5; i++){
+    //         algoInsa1.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin1, dest1, allFilterInspectors.get(i))));
+    //     }
+    //     for (int i = 0; i < 5; i++){
+    //         algoInsa2.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin2, dest2, allFilterInspectors.get(i))));
+    //     }
+        
+    //     algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(0))));
+    //     algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(2))));
+
+    //     for (int i = 0; i < 5; i++){
+    //         algoBretagne.add(i, new DijkstraAlgorithm(new ShortestPathData(graphBretagne, origin4, dest4, allFilterInspectors.get(i))));
+    //     }
+    // }
 
     
 

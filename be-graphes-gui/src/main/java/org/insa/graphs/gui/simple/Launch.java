@@ -9,8 +9,6 @@ import java.io.FileInputStream;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
-import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 import org.insa.graphs.gui.drawing.Drawing;
 import org.insa.graphs.gui.drawing.components.BasicDrawing;
 import org.insa.graphs.model.Graph;
