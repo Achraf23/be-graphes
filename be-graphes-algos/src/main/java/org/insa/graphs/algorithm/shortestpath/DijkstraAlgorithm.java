@@ -13,9 +13,16 @@ import org.insa.graphs.model.Node;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
+    public long countNodeReached;
+
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
+        this.countNodeReached=0;
     }
+
+    void incrementNodeReached(){this.countNodeReached++;}
+
+
 
     public Label createLabel(Node currentNode, boolean marked, Double currentCost, Arc father){
         return new Label(currentNode, marked,currentCost,father);
@@ -65,6 +72,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                             }
                             catch (ElementNotFoundException e){
                                 notifyNodeReached(arc.getDestination());
+                                incrementNodeReached();
                             }
                             labels.get(successorId).setCurrentCost(newCost);
                             binaryHeap.insert(labels.get(successorId));
@@ -101,6 +109,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 
         }
+
+        System.out.println(countNodeReached);
+        System.out.println("binary heap "+binaryHeap.size());
+        
 
         return solution;
     }

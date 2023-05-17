@@ -24,12 +24,12 @@ import org.junit.Test;
 public class DijkstraTest {
 
     //declarations origines/dest/algos
-    private static Node origin1, origin2, origin3, origin4, dest1, dest2, dest3, dest4;
+    protected static Node origin1, origin2, origin3, origin4, dest1, dest2, dest3, dest4;
     
-    private static ArrayList<DijkstraAlgorithm> algoInsa1 = new ArrayList<>();
-    private static ArrayList<DijkstraAlgorithm> algoInsa2 = new ArrayList<>();
-    private static ArrayList<DijkstraAlgorithm> algoToulouse = new ArrayList<>();
-    private static ArrayList<DijkstraAlgorithm> algoBretagne = new ArrayList<>();
+    protected static ArrayList<DijkstraAlgorithm> algoInsa1 = new ArrayList<>();
+    protected static ArrayList<DijkstraAlgorithm> algoInsa2 = new ArrayList<>();
+    protected static ArrayList<DijkstraAlgorithm> algoToulouse = new ArrayList<>();
+    protected static ArrayList<DijkstraAlgorithm> algoBretagne = new ArrayList<>();
 
     public static List<ArcInspector> allFilterInspectors = ArcInspectorFactory.getAllFilters();
     //allFilterInspectors.get(0) : Shortest path, all roads allowed
@@ -59,7 +59,6 @@ public class DijkstraTest {
             new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
         final Graph graphBretagne = reader.read();
         
-
         //add origin & destination
 
         //all road allowed and pedestrians Insa
@@ -78,37 +77,24 @@ public class DijkstraTest {
         origin4 = graphBretagne.getNodes().get(115405);
         dest4 = graphBretagne.getNodes().get(423742);         
 
-        for (int i = 0; i < 5; i++){
-            algoInsa1.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin1, dest1, allFilterInspectors.get(i))));
-        }
-        for (int i = 0; i < 5; i++){
-            algoInsa2.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin2, dest2, allFilterInspectors.get(i))));
-        }
-        
-        algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(0))));
-        algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(2))));
 
-        for (int i = 0; i < 5; i++){
-            algoBretagne.add(i, new DijkstraAlgorithm(new ShortestPathData(graphBretagne, origin4, dest4, allFilterInspectors.get(i))));
+        for(int i=0;i<5;i++){
+            addAlgoPourChaqueFiltre(algoInsa1,graphInsa,origin1,dest1,i);
+            addAlgoPourChaqueFiltre(algoInsa2,graphInsa,origin2,dest2,i);
+            addAlgoPourChaqueFiltre(algoBretagne,graphBretagne,origin4,dest4,i);
         }
+
+        addAlgoPourChaqueFiltre(algoToulouse, graphToulouse, origin3, dest3, 0);
+        addAlgoPourChaqueFiltre(algoToulouse, graphToulouse, origin3, dest3, 2);
         
     }
 
-    // public static void addAlgos(Graph graphInsa,Graph graphToulouse,Graph graphBretagne){
-    //     for (int i = 0; i < 5; i++){
-    //         algoInsa1.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin1, dest1, allFilterInspectors.get(i))));
-    //     }
-    //     for (int i = 0; i < 5; i++){
-    //         algoInsa2.add(i, new DijkstraAlgorithm(new ShortestPathData(graphInsa, origin2, dest2, allFilterInspectors.get(i))));
-    //     }
+    public static void addAlgoPourChaqueFiltre(ArrayList<DijkstraAlgorithm> listeAlgos,Graph graph,Node origin, Node dest,int i){
         
-    //     algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(0))));
-    //     algoToulouse.add(new DijkstraAlgorithm(new ShortestPathData(graphToulouse, origin3, dest3, allFilterInspectors.get(2))));
+        listeAlgos.add(new DijkstraAlgorithm(new ShortestPathData(graph, origin, dest, allFilterInspectors.get(i))));
+        
+    }
 
-    //     for (int i = 0; i < 5; i++){
-    //         algoBretagne.add(i, new DijkstraAlgorithm(new ShortestPathData(graphBretagne, origin4, dest4, allFilterInspectors.get(i))));
-    //     }
-    // }
 
     
 

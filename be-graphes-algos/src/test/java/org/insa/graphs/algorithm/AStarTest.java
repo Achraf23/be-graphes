@@ -5,6 +5,7 @@ import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathSolution;
 import org.insa.graphs.model.io.PathReader;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.insa.graphs.model.io.GraphReader;
 
@@ -14,10 +15,14 @@ import org.insa.graphs.model.Graph;
 import java.io.DataInputStream;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import static org.junit.Assert.assertEquals;
+
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
+
+
 
 import org.insa.graphs.model.Path;
 
@@ -27,8 +32,11 @@ public class AStarTest extends DijkstraTest{
     final static String path="/home/bensebaa/be-graphes/be-graphes/be-graphes-algos/src/test/java/org/insa/graphs/algorithm/path_be_254725_600594.path";
 
     
+    
     @Test
-    public void checkIfSamePathLength() throws IOException{
+    public void compareDijkstraAStar() throws IOException{
+
+        initAll();
 
         GraphReader reader = new BinaryGraphReader(
             new DataInputStream(new BufferedInputStream(new FileInputStream(mapBelgium))));
@@ -49,46 +57,16 @@ public class AStarTest extends DijkstraTest{
         sol1=algo.run();    
         sol2=algo2.run();
 
+        assertEquals(sol1.getPath().getLength(),sol2.getPath().getLength(),0.01);
 
-        assertTrue(sol1.getPath().getLength()==sol2.getPath().getLength());
-        
+        assertTrue(sol1.getSolvingTime().getSeconds()>= sol2.getSolvingTime().getSeconds());
+        assertTrue(algo.countNodeReached>algo2.countNodeReached);
+
+
+  
         
     }
 
-    // public void compareDijkstraAStar() throws IOException{
-
-    //     GraphReader reader = new BinaryGraphReader(
-    //         new DataInputStream(new BufferedInputStream(new FileInputStream(mapBelgium))));
-    //     final Graph graphBelgium = reader.read();
-
-    //     PathReader readerPath = new BinaryPathReader(
-    //         new DataInputStream(new BufferedInputStream(new FileInputStream(path))));
-        
-    //     Path pathTest = readerPath.readPath(graphBelgium);
-
-    //     ShortestPathData data=new ShortestPathData(graphBelgium, pathTest.getOrigin(), pathTest.getDestination(), allFilterInspectors.get(0));
-        
-    //     DijkstraAlgorithm algo=new DijkstraAlgorithm(data);
-    //     AStarAlgorithm algo2 = new AStarAlgorithm(data);
-        
-    //     //test Dijkstra time
-    //     long startTime = System.nanoTime();
-    //     algo.run();    
-    //     // ... the code being measured ...    
-    //     long estimatedTimeDijkstra = System.nanoTime() - startTime;
-
-    //     //test AStar Time
-    //     startTime = System.nanoTime();
-    //     algo2.run();
-    //     long estimatedTimeAStar = System.nanoTime() - startTime;
-
-      
-
-    //     assertTrue(estimatedTimeAStar < estimatedTimeDijkstra);
-    //    /*  Duration d=algo.run().getSolvingTime();
-    //     Duration d2=algo2.run().getSolvingTime(); */
-        
-    // }
 
  
 
