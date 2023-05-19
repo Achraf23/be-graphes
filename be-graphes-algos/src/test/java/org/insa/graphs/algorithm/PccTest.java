@@ -1,0 +1,88 @@
+package org.insa.graphs.algorithm;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.insa.graphs.model.Graph;
+import org.insa.graphs.model.Node;
+import org.insa.graphs.model.io.BinaryGraphReader;
+import org.insa.graphs.model.io.GraphReader;
+import java.util.ArrayList;
+import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
+import java.util.List;
+
+
+public class PccTest {
+    boolean isDijkstra;
+    public static Node origin1, origin2, origin3, origin4, dest1, dest2, dest3, dest4;
+    public static List<ArcInspector> allFilterInspectors = ArcInspectorFactory.getAllFilters();
+    
+    public PccTest(boolean isDijkstra){
+        this.isDijkstra=isDijkstra;
+    }
+
+    public void initTest(ArrayList<DijkstraAlgorithm> algoInsa1,ArrayList<DijkstraAlgorithm> algoInsa2,
+    ArrayList<DijkstraAlgorithm> algoToulouse,ArrayList<DijkstraAlgorithm> algoBretagne) throws IOException{
+        
+        final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
+        final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
+        final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
+
+        // final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        // final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
+        // final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
+
+        // Lecture des graphs associés
+        GraphReader reader = new BinaryGraphReader(
+            new DataInputStream(new BufferedInputStream(new FileInputStream(mapInsa))));
+        final Graph graphInsa = reader.read();
+
+        reader = new BinaryGraphReader(
+            new DataInputStream(new BufferedInputStream(new FileInputStream(mapToulouse))));
+        final Graph graphToulouse = reader.read();
+
+        reader = new BinaryGraphReader(
+            new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
+        final Graph graphBretagne = reader.read();
+
+            //all road allowed and pedestrians Insa
+        origin1 = graphInsa.getNodes().get(929);
+        dest1 = graphInsa.getNodes().get(240);
+
+        //same path for everyone Insa
+        origin2 = graphInsa.getNodes().get(232);
+        dest2 = graphInsa.getNodes().get(214);
+
+        //comparaison shortest et fastest en passant par le periph ou non de Toulouse(mode all roads allowed)
+        origin3 = graphToulouse.getNodes().get(608);
+        dest3 = graphToulouse.getNodes().get(6534);
+
+        //chemin impossible bretagne
+        origin4 = graphBretagne.getNodes().get(115405);
+        dest4 = graphBretagne.getNodes().get(423742);         
+        
+        for(int i=0;i<5;i++){
+            addAlgoPourChaqueFiltre(algoInsa1,graphInsa,origin1,dest1,i);
+            addAlgoPourChaqueFiltre(algoInsa2,graphInsa,origin2,dest2,i);
+            addAlgoPourChaqueFiltre(algoBretagne,graphBretagne,origin4,dest4,i);
+        }
+
+        addAlgoPourChaqueFiltre(algoToulouse, graphToulouse, origin3, dest3, 0);
+        addAlgoPourChaqueFiltre(algoToulouse, graphToulouse, origin3, dest3, 2);
+        
+    }
+
+    public void addAlgoPourChaqueFiltre(ArrayList<DijkstraAlgorithm> listeAlgos,Graph graph,Node origin, Node dest,
+    int i){
+        if(isDijkstra)
+        listeAlgos.add(new DijkstraAlgorithm(new ShortestPathData(graph, origin, dest, allFilterInspectors.get(i))));
+        else
+        listeAlgos.add(new AStarAlgorithm(new ShortestPathData(graph, origin, dest, allFilterInspectors.get(i))));
+ 
+    }   
+
+   
+}
