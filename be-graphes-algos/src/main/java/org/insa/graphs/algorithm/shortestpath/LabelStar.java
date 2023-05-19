@@ -13,15 +13,14 @@ public class LabelStar extends Label {
         super(currentNode,marked,currentCost,father);
         totalCost=this.getCurrentNode().getPoint().distanceTo(destination.getPoint());
     }
-    
-    public Double getCost(Node destination){
-        return this.getCurrentNode().getPoint().distanceTo(destination.getPoint());
-    }
+
+  
+
    
     @Override
     public Double getTotalCost(){
-        
-        return getCurrentCost()+totalCost;
+
+        return getCurrentCost()+this.totalCost;
     }
     
 }

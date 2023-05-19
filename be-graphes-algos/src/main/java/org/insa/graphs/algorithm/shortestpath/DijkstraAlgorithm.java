@@ -6,8 +6,6 @@ import java.util.Collections;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.model.Path;
 
-import java.lang.Math;
-
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 
 import org.insa.graphs.algorithm.utils.ElementNotFoundException;
@@ -15,9 +13,20 @@ import org.insa.graphs.model.Node;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
+    public long countNodeReached;
+
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
+        this.countNodeReached=0;
     }
+
+    void incrementNodeReached(){this.countNodeReached++;}
+
+
+
+    public Label createLabel(Node currentNode, boolean marked, Double currentCost, Arc father){
+        return new Label(currentNode, marked,currentCost,father);
+    }       
 
     @Override
     protected ShortestPathSolution doRun() {
@@ -28,12 +37,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         for (Node n : data.getGraph().getNodes()){
             Label labelNode;
             if (n.equals(data.getOrigin())){
-                labelNode = new Label(n, false, 0.0, null);
+                labelNode = createLabel(n, false, 0.0, null);
                 binaryHeap.insert(labelNode); 
             }
-            else{
-                labelNode = new Label(n, false, Double.POSITIVE_INFINITY, null);
-            }
+            else
+                labelNode = createLabel(n, false, Double.POSITIVE_INFINITY, null);
+            
             labels.add(labelNode);
         }
 
@@ -63,6 +72,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                             }
                             catch (ElementNotFoundException e){
                                 notifyNodeReached(arc.getDestination());
+                                incrementNodeReached();
                             }
                             labels.get(successorId).setCurrentCost(newCost);
                             binaryHeap.insert(labels.get(successorId));
@@ -79,9 +89,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         ShortestPathSolution solution = null;
 
-        if(labels.get(data.getDestination().getId()).getFather()==null){
+        if(labels.get(data.getDestination().getId()).getFather()==null)
             solution = new ShortestPathSolution(data, Status.INFEASIBLE);
-        }else{
+        else{
 
             ArrayList<Arc> arcs = new ArrayList<>();
             Arc arc=labels.get(data.getDestination().getId()).getFather();
@@ -99,6 +109,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 
         }
+
+        
 
         return solution;
     }
