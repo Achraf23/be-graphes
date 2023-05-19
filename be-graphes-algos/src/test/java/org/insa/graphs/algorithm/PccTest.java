@@ -8,9 +8,12 @@ import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.io.BinaryGraphReader;
 import org.insa.graphs.model.io.GraphReader;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 import java.util.List;
 
@@ -25,15 +28,15 @@ public class PccTest {
     }
 
     public void initTest(ArrayList<DijkstraAlgorithm> algoInsa1,ArrayList<DijkstraAlgorithm> algoInsa2,
-    ArrayList<DijkstraAlgorithm> algoToulouse,ArrayList<DijkstraAlgorithm> algoBretagne) throws IOException{
+    ArrayList<DijkstraAlgorithm> algoToulouse,ArrayList<DijkstraAlgorithm> algoBretagne, ArrayList<BellmanFordAlgorithm> algoBellman) throws IOException{
         
-        final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
-        final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
-        final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
+        // final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
+        // final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
+        // final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
 
-        // final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
-        // final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
-        // final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
+        final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
+        final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
 
         // Lecture des graphs associés
         GraphReader reader = new BinaryGraphReader(
@@ -73,6 +76,11 @@ public class PccTest {
         addAlgoPourChaqueFiltre(algoToulouse, graphToulouse, origin3, dest3, 0);
         addAlgoPourChaqueFiltre(algoToulouse, graphToulouse, origin3, dest3, 2);
         
+
+        
+        for(int i=0; i<5; i++){
+            algoBellman.add(new BellmanFordAlgorithm(new ShortestPathData(graphInsa, origin2, dest2, allFilterInspectors.get(i))));
+        }
     }
 
     public void addAlgoPourChaqueFiltre(ArrayList<DijkstraAlgorithm> listeAlgos,Graph graph,Node origin, Node dest,
@@ -82,7 +90,7 @@ public class PccTest {
         else
         listeAlgos.add(new AStarAlgorithm(new ShortestPathData(graph, origin, dest, allFilterInspectors.get(i))));
  
-    }   
+    }    
 
    
 }
