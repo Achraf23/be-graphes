@@ -18,7 +18,7 @@ public class AStarTest extends DijkstraTest{
     public static void initAll() throws IOException {
 
         PccTest p=new PccTest(false);
-        p.initTest(algoInsa1,algoInsa2,algoToulouse,algoBretagne);
+        p.initTest(algoInsa1,algoInsa2,algoToulouse,algoBretagne,algoBellman);
 
     }
 
@@ -85,7 +85,7 @@ public class AStarTest extends DijkstraTest{
 
 
         PccTest p=new PccTest(true);
-        p.initTest(algoInsa1, algoInsa2, algoToulouse, algoBretagne);
+        p.initTest(algoInsa1, algoInsa2, algoToulouse, algoBretagne,algoBellman);
         writeResults(myWriter);
 
 

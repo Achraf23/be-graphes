@@ -13,8 +13,6 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         super(data);
         this.destination=data.getDestination();
     }
-    
-    @Override
     public Label createLabel(Node currentNode, boolean marked, Double currentCost, Arc father){
         return new LabelStar(currentNode, marked,currentCost,father,this.destination);
     } 

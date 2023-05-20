@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
+import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
 
 import org.junit.BeforeClass;
@@ -21,6 +22,7 @@ public class DijkstraTest {
     protected static ArrayList<DijkstraAlgorithm> algoInsa2 = new ArrayList<>();
     protected static ArrayList<DijkstraAlgorithm> algoToulouse = new ArrayList<>();
     protected static ArrayList<DijkstraAlgorithm> algoBretagne = new ArrayList<>();
+    protected static ArrayList<BellmanFordAlgorithm> algoBellman = new ArrayList<>();
 
     
 
@@ -28,7 +30,7 @@ public class DijkstraTest {
     public static void initAll() throws IOException {
 
         PccTest p=new PccTest(true);
-        p.initTest(algoInsa1,algoInsa2,algoToulouse,algoBretagne);
+        p.initTest(algoInsa1,algoInsa2,algoToulouse,algoBretagne,algoBellman);
 
         
     }
@@ -69,5 +71,14 @@ public class DijkstraTest {
         assertEquals(algoBretagne.get(3).run().isFeasible(), false);
         assertEquals(algoBretagne.get(4).run().isFeasible(), false);
     }
+
+    @Test
+    public void isSamePathAsBellmanFord(){
+        for(int i=0; i<5;i++){
+            assertEquals(algoBellman.get(i).run().getPath().size(), algoInsa2.get(i).run().getPath().size());
+            assertEquals(algoBellman.get(i).run().getPath().getLength(), algoInsa2.get(i).run().getPath().getLength(), 0.1);
+            assertEquals(algoBellman.get(i).run().getPath().getMinimumTravelTime(), algoInsa2.get(i).run().getPath().getMinimumTravelTime(), 0.1);
+        } 
+    } 
 
 }

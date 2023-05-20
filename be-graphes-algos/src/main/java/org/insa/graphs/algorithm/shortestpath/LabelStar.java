@@ -14,8 +14,6 @@ public class LabelStar extends Label {
         totalCost=this.getCurrentNode().getPoint().distanceTo(destination.getPoint());
     }
 
-  
-
    
     @Override
     public Double getTotalCost(){
