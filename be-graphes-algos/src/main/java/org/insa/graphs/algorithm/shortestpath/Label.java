@@ -54,7 +54,7 @@ public class Label implements Comparable<Label>{
         // return Double.compare(getTotalCost(), other.getTotalCost());
         System.out.println(this.getCurrentNode().getId());
         System.out.println(other.getCurrentNode().getId());
-        return Double.compare(getTotalCost(), other.getTotalCost());
+        return Double.compare(this.getTotalCost(), other.getTotalCost());
         
     }
 

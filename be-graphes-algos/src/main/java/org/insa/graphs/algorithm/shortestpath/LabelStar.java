@@ -4,7 +4,7 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
 
-public class LabelStar extends Label {
+public class LabelStar extends Label{
 
     Double totalCost;
 
@@ -14,7 +14,17 @@ public class LabelStar extends Label {
         totalCost=this.getCurrentNode().getPoint().distanceTo(destination.getPoint());
     }
 
+     
+    public int compareTo(LabelStar other) {
+        if(Double.compare(this.getTotalCost(), other.getTotalCost()) != 0){
+            return Double.compare(this.getTotalCost(), other.getTotalCost());
+        } 
+        else{
+        return Double.compare(this.totalCost, other.totalCost);
+        } 
+    }
    
+
     @Override
     public Double getTotalCost(){
 
