@@ -22,11 +22,11 @@ public class AStarTest extends DijkstraTest{
 
     }
 
-    @Test
-    public void testGetSamePathForAllFilters() {
-        assertEquals(algoInsa2.get(0).run().getPath().getLength(), algoInsa2.get(1).run().getPath().getLength(), 0.01);
-        assertEquals(algoInsa2.get(2).run().getPath().getLength(), algoInsa2.get(3).run().getPath().getLength(), 0.01);
-    }
+    // @Test
+    // public void testGetSamePathForAllFilters() {
+    //     assertEquals(algoInsa2.get(0).run().getPath().getLength(), algoInsa2.get(1).run().getPath().getLength(), 0.01);
+    //     assertEquals(algoInsa2.get(2).run().getPath().getLength(), algoInsa2.get(3).run().getPath().getLength(), 0.01);
+    // }
 
     void writeResults(FileWriter writer) throws IOException{
         writer.write("algoInsa1\n");

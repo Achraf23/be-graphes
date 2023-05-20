@@ -52,8 +52,8 @@ public class Label implements Comparable<Label>{
     @Override
     public int compareTo(Label other) {
         // return Double.compare(getTotalCost(), other.getTotalCost());
-        System.out.println(this.getCurrentNode().getId());
-        System.out.println(other.getCurrentNode().getId());
+       // System.out.println(this.getCurrentNode().getId());
+        //System.out.println(other.getCurrentNode().getId());
         return Double.compare(this.getTotalCost(), other.getTotalCost());
         
     }
