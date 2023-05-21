@@ -51,7 +51,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while (!binaryHeap.isEmpty() && !labels.get(data.getDestination().getId()).isMarked()){
             //boucle while en n
 
-            Label labelNode = binaryHeap.deleteMin();
+            Label labelNode = binaryHeap.deleteMin();            
             labelNode.setMarked(true);
             notifyNodeMarked(labelNode.getCurrentNode());
 
@@ -60,19 +60,19 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             
             for (Arc arc : labelNode.getCurrentNode().getSuccessors()){
                 //boucle for en n
-
                 if (data.isAllowed(arc)){
                     int successorId = arc.getDestination().getId();
                     if (!labels.get(successorId).isMarked()){
                         double newCost = labelNode.getCurrentCost()+data.getCost(arc); 
                         if (labels.get(successorId).getCurrentCost() > newCost){
+                            // System.out.println("ici");
                             try {
                                 //log n
                                 binaryHeap.remove(labels.get(successorId)); 
                             }
                             catch (ElementNotFoundException e){
                                 notifyNodeReached(arc.getDestination());
-                                incrementNodeReached();
+                                
                             }
                             labels.get(successorId).setCurrentCost(newCost);
                             binaryHeap.insert(labels.get(successorId));

@@ -28,13 +28,13 @@ public class PccTest {
     public void initTest(ArrayList<DijkstraAlgorithm> algoInsa1,ArrayList<DijkstraAlgorithm> algoInsa2,
     ArrayList<DijkstraAlgorithm> algoToulouse,ArrayList<DijkstraAlgorithm> algoBretagne, ArrayList<BellmanFordAlgorithm> algoBellman) throws IOException{
         
-        // final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
-        // final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
-        // final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
+        final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
+        final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
+        final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
 
-        final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
-        final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
-        final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
+        // final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        // final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
+        // final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
 
         // Lecture des graphs associés
         GraphReader reader = new BinaryGraphReader(
