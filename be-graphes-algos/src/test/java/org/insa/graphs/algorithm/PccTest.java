@@ -21,33 +21,45 @@ public class PccTest {
     public static Node origin1, origin2, origin3, origin4, dest1, dest2, dest3, dest4;
     public static List<ArcInspector> allFilterInspectors = ArcInspectorFactory.getAllFilters();
     
+    // cartes.add(new String("/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr"));
+
+    public final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+    public final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
+    public final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
+    public final String mapBelgium ="/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/belgium.mapgr";
+    public final String mapBordeaux ="/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bordeaux.mapgr";
+    public final String mapParis="/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/paris.mapgr";
+
+    
+    
+    
     public PccTest(boolean isDijkstra){
         this.isDijkstra=isDijkstra;
     }
 
+    public Graph readGraph(String path) throws IOException{
+        GraphReader reader = new BinaryGraphReader(
+            new DataInputStream(new BufferedInputStream(new FileInputStream(path))));
+        return reader.read();
+    }
+
+
+
+
     public void initTest(ArrayList<DijkstraAlgorithm> algoInsa1,ArrayList<DijkstraAlgorithm> algoInsa2,
     ArrayList<DijkstraAlgorithm> algoToulouse,ArrayList<DijkstraAlgorithm> algoBretagne, ArrayList<BellmanFordAlgorithm> algoBellman) throws IOException{
         
-        final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
-        final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
-        final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
+        // final String mapInsa = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/insa.mapgr";
+        // final String mapToulouse = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/toulouse.mapgr";
+        // final String mapBretagne = "C:/Users/tgben/OneDrive/Bureau/3micS2/Maps/bretagne.mapgr";
 
-        // final String mapInsa = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
-        // final String mapToulouse = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
-        // final String mapBretagne = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
+        ;
 
         // Lecture des graphs associés
-        GraphReader reader = new BinaryGraphReader(
-            new DataInputStream(new BufferedInputStream(new FileInputStream(mapInsa))));
-        final Graph graphInsa = reader.read();
-
-        reader = new BinaryGraphReader(
-            new DataInputStream(new BufferedInputStream(new FileInputStream(mapToulouse))));
-        final Graph graphToulouse = reader.read();
-
-        reader = new BinaryGraphReader(
-            new DataInputStream(new BufferedInputStream(new FileInputStream(mapBretagne))));
-        final Graph graphBretagne = reader.read();
+        
+        final Graph graphInsa = readGraph(mapInsa);
+        final Graph graphToulouse = readGraph(mapToulouse);
+        final Graph graphBretagne = readGraph(mapBretagne);
 
             //all road allowed and pedestrians Insa
         origin1 = graphInsa.getNodes().get(929);
