@@ -5,22 +5,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import java.io.FileWriter;   // Import the FileWriter class
 
-import org.insa.graphs.model.io.BinaryPathReader;
-import org.insa.graphs.model.io.BinaryGraphReader;
 import org.insa.graphs.model.Graph;
-import java.io.DataInputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import org.insa.graphs.model.io.GraphReader;
 import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
-import org.insa.graphs.model.Path;
-import org.insa.graphs.model.io.PathReader;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathSolution;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.insa.graphs.model.Node;
 
 
@@ -77,12 +67,12 @@ public class AStarTest extends DijkstraTest{
     public ArrayList<ShortestPathSolution> lancerAlgoComparaison() throws IOException{
         ArrayList<chemin> points=new ArrayList<>();
         PccTest p=new PccTest(false);
-        // // points.add(new chemin(p.readGraph(p.mapInsa), 384, 1304));
-        // // points.add(new chemin(p.readGraph(p.mapToulouse), 608, 1309));
-        // points.add(new chemin(p.readGraph(p.mapBretagne), 324623, 326794));
-        // // points.add(new chemin(p.readGraph(p.mapBordeaux), 12554, 7648));
+        points.add(new chemin(p.readGraph(p.mapInsa), 384, 1304));
+        points.add(new chemin(p.readGraph(p.mapToulouse), 608, 1309));
+        points.add(new chemin(p.readGraph(p.mapBretagne), 324623, 326794));
+        points.add(new chemin(p.readGraph(p.mapBordeaux), 12554, 7648));
         points.add(new chemin(p.readGraph(p.mapParis), 34623, 16019));
-        // points.add(new chemin(p.readGraph(p.mapBelgium), 991531, 316069));
+        points.add(new chemin(p.readGraph(p.mapBelgium), 991531, 316069));
 
 
         ArrayList<ShortestPathSolution> solutions=new ArrayList<>();
@@ -108,6 +98,26 @@ public class AStarTest extends DijkstraTest{
 
     }
 
+
+    public void writeNodes(FileWriter writer) throws IOException{
+        PccTest p=new PccTest();
+        ArrayList<Graph> graphs=new ArrayList<>();
+        graphs.add(p.readGraph(p.mapInsa));
+        String sizeNodes=String.valueOf(p.readGraph(p.mapInsa).getNodes().size());
+        writer.write(sizeNodes+"\n");
+        sizeNodes=String.valueOf(p.readGraph(p.mapToulouse).getNodes().size());
+        writer.write(sizeNodes+"\n");
+        sizeNodes=String.valueOf(p.readGraph(p.mapBretagne).getNodes().size());
+        writer.write(sizeNodes+"\n");
+        sizeNodes=String.valueOf(p.readGraph(p.mapBordeaux).getNodes().size());
+        writer.write(sizeNodes+"\n");
+        sizeNodes=String.valueOf(p.readGraph(p.mapParis).getNodes().size());
+        writer.write(sizeNodes+"\n");
+        sizeNodes=String.valueOf(p.readGraph(p.mapBelgium).getNodes().size());
+        writer.write(sizeNodes+"\n");
+
+
+    }
    
 
     // @Test
@@ -139,11 +149,42 @@ public class AStarTest extends DijkstraTest{
     public void checkIfSamePathLength() throws IOException{
 
         FileWriter myWriter = new FileWriter("/home/bensebaa/file.txt");
+
+
         writeResults(myWriter, lancerAlgoComparaison());
+
+        // writeNodes(my Writer);
 
         myWriter.close();
         
 
+    }
+
+    @Test
+    void moy() throws IOException{
+        int run=100;
+
+        long data[] = new long[24]; 
+        for(int i=0;i<24;i++) data[i]=0;
+
+        ArrayList<ShortestPathSolution> solutions=new ArrayList<>();
+
+        for(int iterate=0;iterate<run;iterate++){
+            solutions=lancerAlgoComparaison();
+
+            System.out.println("solution: "+solutions.size());
+            for(int i=0;i<24;i++){
+                data[i]+=solutions.get(i).getSolvingTime().getNano();
+            }
+
+            solutions.clear();
+
+        }
+
+        for(int i=0;i<24;i++){
+            data[i]/=run;
+        }
+        
     }
  
 

@@ -37,6 +37,8 @@ public class PccTest {
         this.isDijkstra=isDijkstra;
     }
 
+    public PccTest(){}
+
     public Graph readGraph(String path) throws IOException{
         GraphReader reader = new BinaryGraphReader(
             new DataInputStream(new BufferedInputStream(new FileInputStream(path))));
